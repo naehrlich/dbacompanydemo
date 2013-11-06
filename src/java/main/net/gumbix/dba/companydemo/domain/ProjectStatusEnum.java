@@ -1,4 +1,4 @@
-package net.gumbix.dba.companydemo.application.process;
+package net.gumbix.dba.companydemo.domain;
 
 /**
  * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )

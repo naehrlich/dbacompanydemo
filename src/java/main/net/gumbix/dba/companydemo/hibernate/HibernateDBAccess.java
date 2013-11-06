@@ -1,6 +1,5 @@
 package net.gumbix.dba.companydemo.hibernate;
 
-import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.db.IdGenerator;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;

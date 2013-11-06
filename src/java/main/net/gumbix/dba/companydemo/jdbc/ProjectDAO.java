@@ -20,10 +20,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
-import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.domain.ProjectStatus;
+import net.gumbix.dba.companydemo.domain.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.WorksOn;
 
@@ -94,19 +94,20 @@ public class ProjectDAO extends AbstractDAO {
             Project project = load(proj.getProjectId());
             // update
             pstmt = prepareStatement("update Projekt set bezeichnung = ?, " +
-                    " naechsteStatusNummer = ? where projektId = ?");
+                    " naechsteStatusNummer = ?, statusId = ? where projektId = ?");
             pstmt.setString(1, proj.getDescription());
             pstmt.setLong(2, proj.getNextStatusReportNumber());
-            pstmt.setString(3, proj.getProjectId());
+            pstmt.setString(3, proj.getStatus().getStatusId());
+            pstmt.setString(4, proj.getProjectId());
+            
             pstmt.execute();
         } catch (ObjectNotFoundException e) {
             // new record
-            pstmt = prepareStatement("insert into Projekt values (?, ?, ?)");
+            pstmt = prepareStatement("insert into Projekt values (?, ?, ?, ?)");
             pstmt.setString(1, proj.getProjectId());
             pstmt.setString(2, proj.getDescription());
             pstmt.setLong(3, proj.getNextStatusReportNumber());
-            //TODO set initial status New
-            //pstmt.setString(3, ProjectStatus.New.toString());
+            pstmt.setString(4, ProjectStatusEnum.New.toString());
             pstmt.execute();
         }
     }

@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
@@ -397,7 +398,8 @@ public class UI {
                     + "4 Statusberichte fuer Projekt ausgeben\n"
                     + "5 Statusbericht eingeben\n"
                     + "6 Statusbericht Aendern\n"
-                    + "7 Projekt Status ausgeben\n\n"
+                    + "7 Projekt Status ausgeben\n"
+                    + "8 Projekt Status aendern\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -518,7 +520,7 @@ public class UI {
 
                 	System.out.print("Projektkuerzel: ");
                 	projId = getUserInputString();
-
+                	project = null;
                 	try {
                 		project = db.loadProject(projId);
                 		System.out.println("Projekt "+projId+" ist im Status \'"+project.getStatus().getDescription()+"\'");                		
@@ -527,6 +529,59 @@ public class UI {
             		}
                 	pressAnyKey();
                 	break;
+                case 8:
+                	
+                	System.out.println("*** Status fuer Projekt aendern ***\n");
+
+                	System.out.print("Projektkuerzel: ");
+                	projId = getUserInputString();
+                	project = null;
+                	try {
+                		project = db.loadProject(projId);
+                		System.out.println("Projekt "+projId+" ist im Status \'"+project.getStatus().getDescription()+"\'");  
+                		
+            		} catch (ObjectNotFoundException e) {
+            			System.out.println("Projekt (fuer Status) nicht gefunden!");
+            		}
+                	                	
+                	List<ProjectStatusEnum> posNextStatus = project.getNextStatus();
+                	if(posNextStatus.size()==0){
+                		System.out.println("Kein Statuswechsel moeglich");
+                		pressAnyKey();
+                    	break;
+                	}
+                	System.out.println("Neue moegliche Status: ");
+                	for(int i=0;i<posNextStatus.size();i++){
+                		System.out.println(i+": "+posNextStatus.get(i));
+                	}
+                	System.out.println("Neuen Status durch eingabe der Nummer waehlen: ");
+                	long userInput = getUserInputLong();
+                	ProjectStatusEnum nextStatus = posNextStatus.get((int) userInput);
+                	if(nextStatus == ProjectStatusEnum.Finished){
+                		System.out.println("ACHTUNG! Durch den wechsel auf Abgeschlossen, werden alle Mitarbeiter "
+                				+ "die am Projekt "+project.getProjectId()+" arbeiten vom Projekt gelöscht");
+                		Set<WorksOn> worksOn = db.loadWorksOn(project);
+                		System.out.println("Es arbeiten "+worksOn.size()+" Personen am Projekt");
+                		System.out.println("Fortfahren (ja/nein)?");
+                		if(!getUserInputString().equals("ja")){
+                			System.out.println("Statusaenderung abgebrochen");
+                    		pressAnyKey();
+                        	break;
+                		}                          		
+                	}
+                	try{
+                		ProjectStatus nextStatusObj = db.loadProjectStatus(nextStatus);
+                		project.setNextStatus(nextStatusObj);
+                		db.storeProject(project);
+                	}catch(Exception exc){
+                		System.out.println(exc.getMessage());
+                		pressAnyKey();
+                    	break;
+                	}
+                	System.out.println("Status von "+project.getProjectId()+" geaendert");
+                	pressAnyKey();
+                	break;
+                	
                 case 0:
                     break;
 
