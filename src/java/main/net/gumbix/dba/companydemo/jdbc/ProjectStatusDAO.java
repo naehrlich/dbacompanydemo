@@ -4,10 +4,10 @@ import java.lang.reflect.Field;
 import java.sql.ResultSet;
 import java.util.WeakHashMap;
 
-import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.ObjectNotFoundException;
 import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.domain.ProjectStatus;
+import net.gumbix.dba.companydemo.domain.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.WorksOn;
 

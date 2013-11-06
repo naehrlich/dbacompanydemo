@@ -20,7 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.jdbc;
 
-import net.gumbix.dba.companydemo.application.process.ProjectStatusEnum;
 import net.gumbix.dba.companydemo.db.AbstractDBAccess;
 import net.gumbix.dba.companydemo.domain.*;
 
@@ -163,6 +162,9 @@ public class JdbcAccess extends AbstractDBAccess {
 
     public void storeProject(Project proj) throws Exception {
         projDAO.store(proj);
+        if(proj.getEmployees().size() == 0){
+        	woOnDAO.delete(proj.getProjectId());
+        }
     }
 
     public void deleteProject(Project proj) throws Exception {

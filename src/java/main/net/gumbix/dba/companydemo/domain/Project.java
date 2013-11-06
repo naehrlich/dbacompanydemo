@@ -20,10 +20,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.domain;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import net.gumbix.dba.companydemo.db.DBAccess;
 
 /**
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
@@ -139,4 +142,65 @@ public class Project {
     public String toFullString() {
         return toString();
     }
+    
+    public List<ProjectStatusEnum> getNextStatus(){
+    	ProjectStatusEnum currentStatus = this.getStatus().getStatus();
+		List<ProjectStatusEnum> nextStatus = new ArrayList<>();
+		
+		switch(currentStatus){
+			case New:
+			case Cancelled:
+			case Blocked:				
+				nextStatus.add(ProjectStatusEnum.InProcess);
+				break;
+			case Finished:
+				break;
+			case InProcess:
+				nextStatus.add(ProjectStatusEnum.Finished);
+				nextStatus.add(ProjectStatusEnum.Blocked);
+				nextStatus.add(ProjectStatusEnum.Cancelled);
+				break;
+		}
+		
+		return nextStatus;
+	}
+    
+    public void setNextStatus(ProjectStatus nextStatus) throws Exception, SQLException{
+		//test if nextStatis is valid
+		boolean isValid = false;
+		List<ProjectStatusEnum> posNextStatus = this.getNextStatus();
+		if(posNextStatus == null){
+			throw new Exception();
+		}
+		for(ProjectStatusEnum s : posNextStatus){
+			if(isValid = (s == nextStatus.getStatus())){
+				break;
+			}
+		}
+		if(!isValid){
+			throw new Exception("Ungueltiger neuer Status");
+		}
+		
+		if(nextStatus.getStatus() == ProjectStatusEnum.InProcess || nextStatus.getStatus() == ProjectStatusEnum.Blocked){
+			//Simply set the new status, there no further requirements
+			this.setStatus(nextStatus);
+		}
+		
+		if(nextStatus.getStatus() == ProjectStatusEnum.Finished){
+			//remove all Employees working on this project		
+			this.employees.clear();			
+			//set next status
+			this.setStatus(nextStatus);
+		}
+		
+		if(nextStatus.getStatus() == ProjectStatusEnum.Cancelled){
+			//if anyone is working on this project abort status change (its no allowed then)
+			//Set<WorksOn> worksOn = db.loadWorksOn(project);
+			if(this.employees.size() != 0){
+				throw new Exception("Abbruch nicht moeglich: Es Arbeiten noch Personen am Projekt "+this.getProjectId());
+			}
+			this.setStatus(nextStatus);
+		}
+
+	}
 }

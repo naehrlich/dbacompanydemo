@@ -8,12 +8,14 @@ public class ProjectStatus {
 	
 	private String statusId;
 	private String description;
+	private ProjectStatusEnum status;
 	
 	public ProjectStatus() {}
 	
 	public ProjectStatus(String statusId, String description){
 		this.statusId = statusId;
-		this.description = description;		
+		this.description = description;
+		this.status = ProjectStatusEnum.valueOf(this.statusId);
 	}
 
 	public String getDescription() {
@@ -44,5 +46,10 @@ public class ProjectStatus {
     public String toFullString() {
         return toString();
     }
+
+	public ProjectStatusEnum getStatus() {
+		return status;
+	}
+
 
 }

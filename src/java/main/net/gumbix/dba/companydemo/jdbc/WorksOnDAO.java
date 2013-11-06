@@ -102,7 +102,19 @@ public class WorksOnDAO extends AbstractDAO {
 
     // Delete an WorksOn Object from Table "MitarbeiterArbeitetAnProjekt"
     public void delete(WorksOn wo) throws Exception {
-        // TODO undone
-        throw new RuntimeException("Noch net fetisch!");
+    	PreparedStatement pstmt =
+                access.connection.prepareStatement("delete from MitarbeiterArbeitetAnProjekt where "
+                		+ "personalNr = ? and projektId = ? ");
+        pstmt.setLong(1, wo.getEmployee().getPersonnelNumber());
+        pstmt.setString(2, wo.getProject().getProjectId());
+        pstmt.execute();
+    }
+    
+    public void delete(String projectId) throws Exception {
+    	PreparedStatement pstmt =
+                access.connection.prepareStatement("delete from MitarbeiterArbeitetAnProjekt where "
+                		+ "projektId = ? ");
+        pstmt.setString(1, projectId);
+        pstmt.execute();
     }
 }
