@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 */
 package net.gumbix.dba.companydemo.db;
 
-import net.gumbix.dba.companydemo.domain.*;
+import net.gumbix.dba.companydemo.domain.*; 
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +30,7 @@ import java.util.Set;
  * This interface contains all methods to interact with the database.
  * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
- * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Maximilian Nï¿½hrlich (maximilian.naehrlich@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
