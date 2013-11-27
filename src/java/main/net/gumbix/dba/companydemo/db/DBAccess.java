@@ -31,6 +31,7 @@ import java.util.Set;
  * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Katrin Andraschko (katrin.andraschko@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
@@ -107,6 +108,9 @@ public interface DBAccess {
     // Queries
     public int getNumberOfPersonnel() throws Exception;
     public int getNumberOfProjects() throws Exception;
+    public int getNumberOfCars() throws Exception;
+    public int getNumberOfDepartments() throws Exception;
+    public int getNumberOfWorkers() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
     public List<Project> getProjectOverview() throws Exception;
    

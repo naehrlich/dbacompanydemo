@@ -43,7 +43,8 @@ import javax.security.auth.login.LoginException;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Patrick Sturm (patrick-sturm@gmx.net)
  * @author Marius Czardybon (m.czardybon@gmx.net)
- * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * * @author Katrin Andraschko (katrin.andraschko@stud.hs-mannheim.de)
  */
 public class UI {
 
@@ -187,6 +188,7 @@ public class UI {
         int menuChoice;
 
         do {
+        	System.out.println("");
             System.out.println("*** DBA-Firmenbeispiel-Hauptmenu ***\n\n"
                     + "Was moechten Sie tun?\n\n"
                     + "1 Personal verwalten\n"
@@ -823,15 +825,23 @@ public class UI {
             switch (menuChoice) {
 
                 case 1:
+                	System.out.println("");
                     System.out.println("*** Statistik ***\n");
 
                     int mc = db.getNumberOfPersonnel();
                     System.out.println("Anzahl Mitarbeiter: " + mc);
+                    int wc = db.getNumberOfWorkers();
+                    System.out.println("  davon Arbeiter:   " + wc);
                     int pc = db.getNumberOfProjects();
                     System.out.println("Anzahl Projekte:    " + pc);
+                    int dc = db.getNumberOfDepartments();
+                    System.out.println("Anzahl Abteilungen: " + dc);
+                    int cc = db.getNumberOfCars();
+                    System.out.println("Anzahl Autos:       " + cc);
                     break;
 
                 case 2:
+                	System.out.println("");
                     System.out.println("*** Nicht ausgelastete Angestellte ***\n");
 
                     List<Employee> list = db.getIdleEmployees();
@@ -898,7 +908,8 @@ public class UI {
     }
     
     private static void processReportOrganigram(List<Personnel> personnelWOBoss, Map<Long, List<Personnel>> mapOrganigram){
-    	
+    	System.out.println("");
+    	System.out.println("*** Organigramm ***\n");
     	for(Personnel pWOBoss : personnelWOBoss){
     		printPersonnel(pWOBoss);
     		System.out.println();

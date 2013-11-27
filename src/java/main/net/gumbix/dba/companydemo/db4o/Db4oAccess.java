@@ -385,4 +385,20 @@ public class Db4oAccess extends AbstractDBAccess {
 		// TODO
         throw new RuntimeException("Not implemented!");
 	}
+	
+	@Override
+	public int getNumberOfCars() throws Exception {
+		// TODO 
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public int getNumberOfDepartments() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public int getNumberOfWorkers() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
 }

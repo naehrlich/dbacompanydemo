@@ -220,6 +220,17 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return result;
     }
+    
+    @Override
+	public int getNumberOfWorkers() throws Exception {
+    	Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery("select count(*) from Arbeiter");
+        rs.next();
+        int result = rs.getInt(1);
+        rs.close();
+        query.close();
+        return result;
+	}
 
     public int getNumberOfProjects() throws Exception {
         Statement query = connection.createStatement();
@@ -230,6 +241,28 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return result;
     }
+    
+    @Override
+   	public int getNumberOfCars() throws Exception {
+       	Statement query = connection.createStatement();
+       	ResultSet rs = query.executeQuery("select count(*) from Auto");
+       	rs.next();
+           int result = rs.getInt(1);
+           rs.close();
+           query.close();
+           return result;
+   	}
+
+   	@Override
+   	public int getNumberOfDepartments() throws Exception {
+   		Statement query = connection.createStatement();
+   		ResultSet rs = query.executeQuery("select count(*) from Abteilung");
+   		rs.next();
+           int result = rs.getInt(1);
+           rs.close();
+           query.close();
+           return result;
+   	}
 
     public List<Employee> getIdleEmployees() throws Exception {
         String queryString = "select personalNr, sum(prozAnteil) " +
