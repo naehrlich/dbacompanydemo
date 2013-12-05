@@ -104,6 +104,9 @@ public interface DBAccess {
     
     //ProjectStatus
     public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception;
+    
+    public void storeProjectStatus(ProjectStatus projectStatus) throws Exception;
+    
 
     // Queries
     public int getNumberOfPersonnel() throws Exception;

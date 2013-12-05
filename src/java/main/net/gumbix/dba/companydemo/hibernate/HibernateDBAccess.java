@@ -292,4 +292,9 @@ public class HibernateDBAccess extends AbstractDBAccess {
 	public int getNumberOfWorkers() throws Exception {
 		throw new RuntimeException("Method not yet implemented");
 	}
+	
+	@Override
+	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
+		throw new RuntimeException("Method not yet implemented");		
+	}
 }

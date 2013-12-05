@@ -209,6 +209,11 @@ public class JdbcAccess extends AbstractDBAccess {
     public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception {
     	return projStDAO.load(projectStatus);
     }
+    
+	@Override
+	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
+		projStDAO.store(projectStatus);
+	}
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {

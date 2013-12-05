@@ -18,5 +18,6 @@
 	<classpathentry kind="lib" path="I:/schule/HS/development/git_reps/dbacompanydemo/lib/scala-library.jar"/>
 	<classpathentry kind="lib" path="I:/schule/HS/development/git_reps/dbacompanydemo/lib/scala-swing.jar"/>
 	<classpathentry kind="lib" path="I:/schule/HS/development/git_reps/dbacompanydemo/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="I:/schule/HS/development/git_reps/dbacompanydemo/lib/hsqldb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
