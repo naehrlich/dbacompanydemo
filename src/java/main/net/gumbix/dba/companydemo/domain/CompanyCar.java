@@ -85,4 +85,9 @@ public class CompanyCar {
         }
         return s;
     }
+    
+    @Override
+    public int hashCode() {
+    	return this.licensePlate.hashCode();
+    }
 }

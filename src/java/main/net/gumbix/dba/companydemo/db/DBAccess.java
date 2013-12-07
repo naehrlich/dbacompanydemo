@@ -120,5 +120,7 @@ public interface DBAccess {
     public List<Personnel> getPersonnellWOBoss() throws Exception;
     public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception;
 
+    public Map<CompanyCar, Personnel> getCompanyCars() throws Exception;
+    
     public void close();
 }

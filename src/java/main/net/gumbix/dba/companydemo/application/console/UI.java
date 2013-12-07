@@ -31,6 +31,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
@@ -817,7 +818,8 @@ public class UI {
                     + "1 Statistik\n"
                     + "2 Nicht ausgelastete Angestellte\n"
                     + "3 Projektuebersicht\n"
-                    + "4 Organigramm\n\n"
+                    + "4 Organigramm\n"
+                    + "5 Firmenwagenuebersicht\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -868,6 +870,27 @@ public class UI {
                 	processReportOrganigram(personnelWOBoss, mapOrganigram);
                 	break;
                 	
+                case 5:
+                	System.out.println("");
+                 	System.out.println("*** Firmenwagenuebersicht ***\n");
+                 	
+                 	Map<CompanyCar, Personnel> carsWithPersonnel = db.getCompanyCars();
+                 	Set<CompanyCar> cars= carsWithPersonnel.keySet();
+                 	Iterator iterator = cars.iterator();
+                 	
+                 	while(iterator.hasNext()){
+                 		CompanyCar key = (CompanyCar) iterator.next();
+                 		System.out.println(key.getLicensePlate());
+                 		
+                 		Personnel personnel = carsWithPersonnel.get(key);
+                 		if(personnel.getPersonnelNumber()!=0){
+                 			System.out.println("  "+personnel.getPersonnelNumber()
+                 					+" - "+personnel.getFirstName()+" "+personnel.getLastName());
+                 		}else{
+                 			System.out.println("  allgemeiner Firmenwagen");
+                 		}
+                 	}
+                	
                 case 0:
                     break;
 
@@ -882,6 +905,7 @@ public class UI {
      * Helper methods.
      */
     private static void processReportProjectOverview(List<Project> projects){
+    	System.out.println("");
     	System.out.println("*** Projektuebersicht ***\n");
     	String lastProjectId = "";
     	for (Project project : projects) {
@@ -996,5 +1020,6 @@ public class UI {
         System.out.println(" - Patrick Sturm");
         System.out.println(" - Markus Gumbel");
         System.out.println(" - Maximilian Naehrlich");
+        System.out.println(" - Katrin Andraschko");
     }
 }

@@ -406,4 +406,9 @@ public class Db4oAccess extends AbstractDBAccess {
 	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
 		throw new RuntimeException("Method not yet implemented");		
 	}
+	
+	@Override
+	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
 }

@@ -6,7 +6,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 import net.gumbix.dba.companydemo.db.DBAccess;
+import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
+import net.gumbix.dba.companydemo.jdbc.ProjectDAO;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +19,7 @@ import org.junit.Test;
 
 public class TestQueries {
 	
-	DBAccess access;
+	JdbcAccess access;
 	
 	@Before
 	public void setupTest() throws Exception{
@@ -26,7 +28,11 @@ public class TestQueries {
 	
 	@Test
 	public void testMockDB() throws Exception{		
-		assertTrue(true);
+		assertTrue(access != null);
+		
+		ProjectDAO pDAO = new ProjectDAO(access);
+		Project p = pDAO.load("SEC");
+		System.out.println(p);
 	}
 
 

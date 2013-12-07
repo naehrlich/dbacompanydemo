@@ -360,6 +360,33 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return personnels;
 	}
+	
+	@Override
+	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+		String queryString = "select nummernschild, personalNr from Firmenwagen;";
+		
+		Statement query = connection.createStatement();
+		ResultSet rs = query.executeQuery(queryString);
+		
+		Map<CompanyCar,Personnel> carsWithPersonnel = new HashMap();
+		
+		while (rs.next()){
+			String licensePlate = rs.getString(1);
+			CompanyCar car = (comCarDAO.load(licensePlate));
+			Personnel personnel = null;
+			
+			if(rs.getLong(2)!=0){
+				 personnel= persDAO.load(rs.getLong(2));
+			}else{
+				personnel = new Personnel();
+			}
+			
+			carsWithPersonnel.put(car, personnel);
+		}
+		rs.close();
+		query.close();
+		return carsWithPersonnel;
+	}	
 
 }
 
