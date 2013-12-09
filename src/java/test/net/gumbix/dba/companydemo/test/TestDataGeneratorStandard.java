@@ -1,11 +1,8 @@
 package net.gumbix.dba.companydemo.test;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.GregorianCalendar;
 
+import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.Address;
 import net.gumbix.dba.companydemo.domain.Car;
 import net.gumbix.dba.companydemo.domain.CompanyCar;
@@ -17,142 +14,67 @@ import net.gumbix.dba.companydemo.domain.ProjectStatus;
 import net.gumbix.dba.companydemo.domain.StatusReport;
 import net.gumbix.dba.companydemo.domain.Worker;
 import net.gumbix.dba.companydemo.domain.WorksOn;
-import net.gumbix.dba.companydemo.jdbc.JdbcAccess;
-import net.gumbix.dba.companydemo.jdbc.JdbcIdGenerator;
 
-public class JdbcAccessTestDouble extends JdbcAccess{
+public class TestDataGeneratorStandard implements TestDataGenerator{
 	
-	private TestDataGenerator testDataGenerator;
-	
-	public JdbcAccessTestDouble(TestDataGenerator testDataGenerator) throws Exception{
-		super("jdbc:hsqldb:mem:mymemdb;sql.syntax_mys=true", "firmenwelt", "firmenwelt10");
-		this.testDataGenerator = testDataGenerator;
-		this.setupMockDb();
-	}	
-	
-	private void setupMockDb() throws Exception{
-		this.createMockTables();
-		testDataGenerator.createMockData(this);
+	DBAccess access;
+	/*
+	private TestDataGeneratorStandard(DBAccess access){
+		this.access = access;
 	}
 	
-	private void createMockTables() throws SQLException{        
-        String[] setupStatements = {
-        		"create user firmenwelt password 'firmenwelt10';",
-        		"create schema firmenwelt AUTHORIZATION DBA;",
-        		"create table Ort (plz char(5) primary key not null,ortsname varchar(20));",        		
-        		"create table Abteilung (abteilungsNr bigint not null "+/*auto_increment*/"IDENTITY,bezeichnung varchar(30));",        		
-        		"create table Mitarbeiter (personalNr bigint not null "+/*auto_increment*/"IDENTITY,vorname varchar(30),nachname varchar(30),"+
-        				"strasse varchar(30),hausNr varchar(5),plz char(5),gebDatum date,gehalt decimal(7, 2),"+
-        				"abteilungsId bigint,funktion varchar(30),vorgesetzterNr bigint,"/*primary key (personalNr),"*/+
-        				"foreign key (vorgesetzterNr) references Mitarbeiter (personalNr),"+
-        				"foreign key (abteilungsId) references Abteilung(abteilungsNr),"+
-        				"foreign key (plz) references Ort(plz));",
-        		"create index nameIdx on Mitarbeiter(nachname);",        		
-        		"create table Angestellter (personalNr bigint "+/*auto_increment*/"IDENTITY not null,telefonNr varchar(20),"+
-        				"foreign key (personalNr) references Mitarbeiter (personalNr)on update cascade on delete cascade);",        		
-        		"create table Arbeiter (personalNr bigint primary key not null,arbeitsplatz varchar(20),"+
-        				"foreign key (personalNr) references Mitarbeiter (personalNr)"+
-        				"on update cascade on delete cascade);",        				
-        		"create table Auto (modell varchar(20) primary key not null,marke varchar(20));",        		
-        		"create table Firmenwagen (nummernschild varchar(12) primary key not null,modell varchar(20),personalNr bigint,"+
-        				"foreign key (modell) references Auto(modell),foreign key (personalNr) references Angestellter(personalNr));",        		
-        		"CREATE TABLE ProjektStatus (statusId VARCHAR(15) NOT NULL,beschreibung VARCHAR(255) NULL,PRIMARY KEY (statusId));",        		
-        		"create table Projekt (projektId char(3) primary key not null,bezeichnung varchar(30),"+
-        				"naechsteStatusNummer integer not null,statusId varchar(15)  NOT NULL,"+
-        				"foreign key (statusId) references ProjektStatus(statusId));",        				
-				"create index bezeichnungIdx on Projekt(bezeichnung);",				
-				"create table Statusbericht (projektId char(3) not null,fortlaufendeNr bigint not null,datum date,"+
-						"inhalt text,primary key (projektId, fortlaufendeNr),foreign key (projektId) references Projekt(projektId));",						
-				"create table MitarbeiterArbeitetAnProjekt (personalNr bigint not null,projektId char(3) not null,taetigkeit varchar(255),"+
-						"prozAnteil decimal(5, 2),primary key (personalNr, projektId),"+
-						"foreign key (personalNr) references Angestellter(personalNr),foreign key (projektId) references Projekt(projektId));",
-						
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Ort to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Abteilung  to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Mitarbeiter to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Angestellter to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Arbeiter  to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Auto to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Firmenwagen to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON ProjektStatus to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Projekt to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON Statusbericht to public;",
-				"GRANT SELECT, UPDATE, DELETE, INSERT ON MitarbeiterArbeitetAnProjekt to public;",
-				
-				"create view MitarbeiterAlleKlassen as "+
-						"(select Mitarbeiter.*, Ort.ortsname, Arbeiter.personalNr as wPersNr, Arbeiter.arbeitsplatz, Angestellter.personalNr as aPersNr, Angestellter.telefonNr"+
-						" from Mitarbeiter left outer join Arbeiter on Mitarbeiter.personalNr = Arbeiter.personalNr "+
-						" left outer join Angestellter on Mitarbeiter.personalNr = Angestellter.personalNr"+
-						" join Ort on Mitarbeiter.plz = Ort.plz);"
-        };
-        
-        for(int i=0;++i<setupStatements.length;){
-        	Statement query = this.connection.createStatement();
-        	query.execute(setupStatements[i]);
-        	query.close();
-        } 
-	}
+	public static TestDataGenerator getInstance(DBAccess access){
+		return new TestDataGeneratorStandard(access);
+	}*/
 	
 	@Override
-	public void close() {
-		super.close();
-		Statement query;
-		try {
-			query = this.connection.createStatement();
-	    	query.execute("SHUTDOWN;");
-	    	query.close();
-		} catch (SQLException e) {
-		}
-
-	}
-	
-	/*
-	private void createMockData() throws Exception{
+	public void createMockData(DBAccess access) throws Exception{
+		this.access = access;
 		// Create some car types:
 		Car touran = new Car("Touran", "VW");
-		super.storeCar(touran);
-		Car passat = new Car("Passat", "VW");
-		super.storeCar(passat);
+		access.storeCar(touran);
+		/**/Car passat = new Car("Passat", "VW");
+		access.storeCar(passat);
 		Car sklasse = new Car("S-Klasse", "Mercedes");
-		super.storeCar(sklasse);
+		access.storeCar(sklasse);
 
 		// Create some company cars:
 		CompanyCar companyCar1234 = new CompanyCar("MA-MA 1234", sklasse);
-		super.storeCompanyCar(companyCar1234);
+		access.storeCompanyCar(companyCar1234);
 		CompanyCar companyCar1235 = new CompanyCar("MA-MA 1235", passat);
-		super.storeCompanyCar(companyCar1235);
+		access.storeCompanyCar(companyCar1235);
 		CompanyCar companyCar1236 = new CompanyCar("MA-MA 1236", touran);
-		super.storeCompanyCar(companyCar1236);
+		access.storeCompanyCar(companyCar1236);
 		CompanyCar companyCar1237 = new CompanyCar("MA-MA 1237", passat);
-		super.storeCompanyCar(companyCar1237);
+		access.storeCompanyCar(companyCar1237);
 		CompanyCar companyCar1240 = new CompanyCar("MA-MA 1240", passat);
-		super.storeCompanyCar(companyCar1240);
+		access.storeCompanyCar(companyCar1240);
 		CompanyCar companyCar1241 = new CompanyCar("MA-MA 1241", passat);
-		super.storeCompanyCar(companyCar1241);
+		access.storeCompanyCar(companyCar1241);
 
 		// Pool-Car:
 		CompanyCar companyCar1238 = new CompanyCar("MA-MA 1238", touran);
-		super.storeCompanyCar(companyCar1238);
+		access.storeCompanyCar(companyCar1238);
 
 		// Create some departments:
 		Department management = new Department(1, "Management");
-		super.storeDepartment(management);
+		access.storeDepartment(management);
 		Department einkauf = new Department(2, "Einkauf");
-		super.storeDepartment(einkauf);
+		access.storeDepartment(einkauf);
 		Department verkauf = new Department(3, "Verkauf & Marketing");
-		super.storeDepartment(verkauf);
+		access.storeDepartment(verkauf);
 		Department it = new Department(4, "IT");
-		super.storeDepartment(it);
+		access.storeDepartment(it);
 		Department entwicklung = new Department(5, "Forschung & Entwicklung");
-		super.storeDepartment(entwicklung);
+		access.storeDepartment(entwicklung);
 		Department produktion = new Department(6, "Produktion");
-		super.storeDepartment(produktion);
+		access.storeDepartment(produktion);
 		Department buchhaltung = new Department(7, "Buchhaltung");
-		super.storeDepartment(buchhaltung);
+		access.storeDepartment(buchhaltung);
 		Department kundendienst = new Department(8, "Kundendienst");
-		super.storeDepartment(kundendienst);
+		access.storeDepartment(kundendienst);
 		Department qualitaetssicherung = new Department(9, "Qualitätssicherung");
-		super.storeDepartment(qualitaetssicherung);
+		access.storeDepartment(qualitaetssicherung);
 
 		// Create personnel:
 
@@ -229,7 +151,7 @@ public class JdbcAccessTestDouble extends JdbcAccess{
             1968, 04, 10, 6900.0, "Untere straße", "2", "68163", "Mannheim",
             "+49 621 12345-600", entwicklung, "F&E_Leiter", employeeLohe, companyCar1236);
 		// TODO car was also modified...
-		super.storeCompanyCar(companyCar1236);
+		access.storeCompanyCar(companyCar1236);
 
 		Employee employeeWalther = addEmployee("Walther, Dr.", "Sabrina",
             1978, 07, 16, 5990.0, "Hansaweg", "22", "68163", "Mannheim",
@@ -262,80 +184,80 @@ public class JdbcAccessTestDouble extends JdbcAccess{
 		ProjectStatus cancelled = new ProjectStatus("Cancelled", "Abgebrochen");
 		ProjectStatus finished = new ProjectStatus("Finished", "Abgeschlossen"); 
 		
-		super.storeProjectStatus(nu);
-		super.storeProjectStatus(inProcess);
-		super.storeProjectStatus(blocked);
-		super.storeProjectStatus(cancelled);
-		super.storeProjectStatus(finished);
+		access.storeProjectStatus(nu);
+		access.storeProjectStatus(inProcess);
+		access.storeProjectStatus(blocked);
+		access.storeProjectStatus(cancelled);
+		access.storeProjectStatus(finished);
 
 		// Leute einstellen:
 		Project hirePeople = new Project("LES", "Personal einstellen");
 		hirePeople.setStatus(nu);
-		super.storeProject(hirePeople);
+		access.storeProject(hirePeople);
 		WorksOn hirePeopleLohe = new WorksOn(employeeLohe, hirePeople, 10,
             "Verträge ausstellen");
-		super.storeWorksOn(hirePeopleLohe);
+		access.storeWorksOn(hirePeopleLohe);
 
 		StatusReport hirePeopleReport1 = new StatusReport(
             new GregorianCalendar(2011, 10, 17).getTime(),
             "Das ist der erste Statusbericht", hirePeople);
-		super.storeStatusReport(hirePeopleReport1);
+		access.storeStatusReport(hirePeopleReport1);
 		StatusReport hirePeopleReport2 = new StatusReport(
             new GregorianCalendar(2011, 10, 18).getTime(),
             "Das ist noch ein Statusbericht", hirePeople);
-		super.storeStatusReport(hirePeopleReport2);
+		access.storeStatusReport(hirePeopleReport2);
 
 		// Neues Produkt entwickeln:
 		Project research = new Project("FOP", "Neues Produkt entwickeln");
 		research.setStatus(inProcess);
-		super.storeProject(research);
+		access.storeProject(research);
 		WorksOn researchWalther = new WorksOn(employeeWalther, research, 50,
             "Modelle entwerfen");
-		super.storeWorksOn(researchWalther);
+		access.storeWorksOn(researchWalther);
 
 		WorksOn researchThorn = new WorksOn(employeeThorn, research, 100,
             "Thermodynamik berechnen");
-		super.storeWorksOn(researchThorn);
+		access.storeWorksOn(researchThorn);
 
 		StatusReport researchReport1 = new StatusReport(
             new GregorianCalendar(2012, 8, 17).getTime(),
             "Das ist der erste Statusbericht", research);
-		super.storeStatusReport(researchReport1);
+		access.storeStatusReport(researchReport1);
 		StatusReport researchReport2 = new StatusReport(
             new GregorianCalendar(2012, 8, 28).getTime(),
             "Fortschritte beim Modell", research);
-		super.storeStatusReport(researchReport2);
+		access.storeStatusReport(researchReport2);
 
 		// DB portieren:
 		Project dbPort = new Project("DBP", "DB portieren");
 		dbPort.setStatus(nu);
-		super.storeProject(dbPort);
+		access.storeProject(dbPort);
 		WorksOn dbPortZiegler = new WorksOn(employeeZiegler, dbPort, 20,
             "Architektur entwerfen");
-		super.storeWorksOn(dbPortZiegler);
+		access.storeWorksOn(dbPortZiegler);
 
 		WorksOn dbPortBauer = new WorksOn(employeeBauer, dbPort, 70,
             "Skripte schreiben");
-		super.storeWorksOn(dbPortBauer);
+		access.storeWorksOn(dbPortBauer);
 
 		// Security-Konzept:
 		Project securityConcept = new Project("SEC", "Security-Konzept fuer Firma");
 		securityConcept.setStatus(nu);
-		super.storeProject(securityConcept);
+		access.storeProject(securityConcept);
 		WorksOn securityConceptZiegler = new WorksOn(employeeZiegler, securityConcept, 40,
             "Security-Konzept entwerfen");
-		super.storeWorksOn(securityConceptZiegler);
+		access.storeWorksOn(securityConceptZiegler);
 
 		WorksOn securityConceptBauer = new WorksOn(employeeBauer, securityConcept, 40,
             "Hacking");
-		super.storeWorksOn(securityConceptBauer);
+		access.storeWorksOn(securityConceptBauer);
 
 		WorksOn securityConceptWeiss = new WorksOn(employeeWeiss, securityConcept, 100,
             "SQL-Code-Injection-Beratung");
-		super.storeWorksOn(securityConceptWeiss);
+		access.storeWorksOn(securityConceptWeiss);
 
 		System.out.println("Beispieldaten erzeugt.");
-		
+		/**/
 	}
 
 /**
@@ -357,7 +279,7 @@ public class JdbcAccessTestDouble extends JdbcAccess{
  * @param car
  * @return
  * @throws Exception
- *//*
+ */
 	private Employee addEmployee(String lastName, String firstName,
                              int year, int month, int day, double salary,
                              String street, String houseNumber,
@@ -372,7 +294,7 @@ public class JdbcAccessTestDouble extends JdbcAccess{
 		employee.setDepartment(dep);
     	employee.setPosition(position);
     	employee.setBoss(boss);
-    	super.storePersonnel(employee);
+    	access.storePersonnel(employee);
     	return employee;
 	}
 
@@ -394,7 +316,7 @@ public class JdbcAccessTestDouble extends JdbcAccess{
  * @param boss
  * @return
  * @throws Exception
- *//*
+ */
 	private Worker addWorker(String lastName, String firstName,
                          int year, int month, int day, double salary,
                          String street, String houseNumber,
@@ -407,8 +329,8 @@ public class JdbcAccessTestDouble extends JdbcAccess{
 		worker.setDepartment(dep);
 		worker.setPosition(position);
 		worker.setBoss(boss);
-		super.storePersonnel(worker);
+		access.storePersonnel(worker);
 		return worker;
-	}*/
-}
+	}
 
+}

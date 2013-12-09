@@ -66,28 +66,28 @@ public class ExampleData extends TestCase {
     
     public void jdbcLocal() throws Exception {
         access = new JdbcAccess("firmenwelt", "firmenwelt10");
-        TestDataGenerator.getInstance(access).createMockData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void jdbc() throws Exception {
         access = new JdbcAccess(); // codd.hs-mannheim.de
-        TestDataGenerator.getInstance(access).createMockData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void db4oEmbedded() throws Exception {
         new File("firmenwelt.yap").delete();
         access = new Db4oAccess("firmenwelt.yap");
-        TestDataGenerator.getInstance(access).createMockData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void db4oServer() throws Exception {
         access = new Db4oAccess();
-        TestDataGenerator.getInstance(access).createMockData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void hibernateLocal() throws Exception {
         access = new HibernateDBAccess();
-        TestDataGenerator.getInstance(access).createMockData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     /*
