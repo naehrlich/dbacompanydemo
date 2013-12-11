@@ -18,14 +18,6 @@ import net.gumbix.dba.companydemo.domain.WorksOn;
 public class TestDataGeneratorStandard implements TestDataGenerator{
 	
 	DBAccess access;
-	/*
-	private TestDataGeneratorStandard(DBAccess access){
-		this.access = access;
-	}
-	
-	public static TestDataGenerator getInstance(DBAccess access){
-		return new TestDataGeneratorStandard(access);
-	}*/
 	
 	@Override
 	public void createMockData(DBAccess access) throws Exception{
