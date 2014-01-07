@@ -401,6 +401,18 @@ public class Db4oAccess extends AbstractDBAccess {
 	public int getNumberOfWorkers() throws Exception {
 		throw new RuntimeException("Method not yet implemented");
 	}
+	
+	@Override
+	public int getNumberOfFreeCars() throws Exception {
+		// TODO 
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
+	public int getNumberOfUsedCars() throws Exception {
+		// TODO 
+		throw new RuntimeException("Method not yet implemented");
+	}
 
 	@Override
 	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
@@ -409,6 +421,11 @@ public class Db4oAccess extends AbstractDBAccess {
 	
 	@Override
 	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
+	public String[][] getdepartmentCountPersonnel() throws Exception {
 		throw new RuntimeException("Method not yet implemented");
 	}
 }

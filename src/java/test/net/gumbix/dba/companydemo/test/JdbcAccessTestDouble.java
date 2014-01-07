@@ -83,7 +83,9 @@ public class JdbcAccessTestDouble extends JdbcAccess{
 						"(select Mitarbeiter.*, Ort.ortsname, Arbeiter.personalNr as wPersNr, Arbeiter.arbeitsplatz, Angestellter.personalNr as aPersNr, Angestellter.telefonNr"+
 						" from Mitarbeiter left outer join Arbeiter on Mitarbeiter.personalNr = Arbeiter.personalNr "+
 						" left outer join Angestellter on Mitarbeiter.personalNr = Angestellter.personalNr"+
-						" join Ort on Mitarbeiter.plz = Ort.plz);"
+						" join Ort on Mitarbeiter.plz = Ort.plz);",
+						
+				"GRANT SELECT, UPDATE, DELETE, INSERT ON MitarbeiterAlleKlassen to public;",
         };
         
         for(int i=0;++i<setupStatements.length;){

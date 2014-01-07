@@ -257,6 +257,30 @@ public class JdbcAccess extends AbstractDBAccess {
            query.close();
            return result;
    	}
+    
+    @Override
+	public int getNumberOfFreeCars() throws Exception {
+		Statement query = connection.createStatement();
+		ResultSet rs = query
+				.executeQuery("select count(*) from Firmenwagen where personalNr is null");
+		rs.next();
+		int result = rs.getInt(1);
+		rs.close();
+		query.close();
+		return result;
+	}
+
+	@Override
+	public int getNumberOfUsedCars() throws Exception {
+		Statement query = connection.createStatement();
+		ResultSet rs = query
+				.executeQuery("select count(*) from Firmenwagen where personalNr is not null");
+		rs.next();
+		int result = rs.getInt(1);
+		rs.close();
+		query.close();
+		return result;
+	}
 
    	@Override
    	public int getNumberOfDepartments() throws Exception {
@@ -270,9 +294,9 @@ public class JdbcAccess extends AbstractDBAccess {
    	}
 
     public List<Employee> getIdleEmployees() throws Exception {
-        String queryString = "select personalNr, sum(prozAnteil) " +
+        String queryString = "select Mitarbeiter.personalNr, sum(MitarbeiterArbeitetAnProjekt.prozAnteil) " +
                 "from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt " +
-                "group by Mitarbeiter.personalNr having sum(prozAnteil) < 50 " +
+                "group by Mitarbeiter.personalNr having sum(MitarbeiterArbeitetAnProjekt.prozAnteil) < 50 " +
                 "order by Mitarbeiter.nachname";
         Statement query = connection.createStatement();
         ResultSet rs = query.executeQuery(queryString);
@@ -387,6 +411,31 @@ public class JdbcAccess extends AbstractDBAccess {
 		query.close();
 		return carsWithPersonnel;
 	}	
+	
+	public String[][] getdepartmentCountPersonnel() throws Exception {
+		String queryString = "select a.bezeichnung , count(bezeichnung) as 'AnzahlDerMitarbeiter' "
+						+"from Abteilung a "
+						+"join Mitarbeiter m "
+						+"on a.abteilungsNr = m.abteilungsId "
+						+"group by bezeichnung";
+						
+		Statement query = connection.createStatement();
+		ResultSet rs = query.executeQuery(queryString);	
+		int anzahlAbteilungen= getNumberOfDepartments();
+		String[][] result = new String[anzahlAbteilungen][2];	
+		
+		rs.first();
+		for(int i = 0; i<anzahlAbteilungen ; i++)
+		{			
+			if (rs.next()){
+				result[i][0]=rs.getString("bezeichnung");
+				result[i][1]=rs.getString("AnzahlDerMitarbeiter");
+			}
+		}
+		rs.close();
+		query.close();
+		return result;
+	}
 
 }
 

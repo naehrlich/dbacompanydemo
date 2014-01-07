@@ -32,6 +32,7 @@ import java.util.Set;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Maximilian N&auml;hrlich (maximilian.naehrlich@stud.hs-mannheim.de)
  * @author Katrin Andraschko (katrin.andraschko@stud.hs-mannheim.de)
+ * @author Andreas Küster (andreas.kuester@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
@@ -114,6 +115,8 @@ public interface DBAccess {
     public int getNumberOfCars() throws Exception;
     public int getNumberOfDepartments() throws Exception;
     public int getNumberOfWorkers() throws Exception;
+    public int getNumberOfFreeCars() throws Exception;
+    public int getNumberOfUsedCars() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
     public List<Project> getProjectOverview() throws Exception;
    
@@ -121,6 +124,8 @@ public interface DBAccess {
     public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception;
 
     public Map<CompanyCar, Personnel> getCompanyCars() throws Exception;
+    
+    public String[][] getdepartmentCountPersonnel() throws Exception;
     
     public void close();
 }
