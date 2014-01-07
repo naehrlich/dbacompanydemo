@@ -276,4 +276,47 @@ public class HibernateDBAccess extends AbstractDBAccess {
 		// TODO
         throw new RuntimeException("Not implemented!");
 	}
+	
+	@Override
+	public int getNumberOfCars() throws Exception {
+		 // TODO
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public int getNumberOfDepartments() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+
+	@Override
+	public int getNumberOfWorkers() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
+	public int getNumberOfFreeCars() throws Exception {
+		// TODO 
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
+	public int getNumberOfUsedCars() throws Exception {
+		// TODO 
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
+	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
+		throw new RuntimeException("Method not yet implemented");		
+	}
+	
+	@Override
+	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}	
+	
+	@Override
+	public String[][] getdepartmentCountPersonnel() throws Exception {
+		throw new RuntimeException("Method not yet implemented");
+	}
 }

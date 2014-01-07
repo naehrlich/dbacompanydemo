@@ -30,7 +30,9 @@ import java.util.Set;
  * This interface contains all methods to interact with the database.
  * Each database implementation/technology implements this interface.
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
- * @author Maximilian Nï¿½hrlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Maximilian N&auml;hrlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Katrin Andraschko (katrin.andraschko@stud.hs-mannheim.de)
+ * @author Andreas Küster (andreas.kuester@stud.hs-mannheim.de)
  */
 public interface DBAccess {
 
@@ -103,15 +105,27 @@ public interface DBAccess {
     
     //ProjectStatus
     public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception;
+    
+    public void storeProjectStatus(ProjectStatus projectStatus) throws Exception;
+    
 
     // Queries
     public int getNumberOfPersonnel() throws Exception;
     public int getNumberOfProjects() throws Exception;
+    public int getNumberOfCars() throws Exception;
+    public int getNumberOfDepartments() throws Exception;
+    public int getNumberOfWorkers() throws Exception;
+    public int getNumberOfFreeCars() throws Exception;
+    public int getNumberOfUsedCars() throws Exception;
     public List<Employee> getIdleEmployees() throws Exception;
     public List<Project> getProjectOverview() throws Exception;
    
     public List<Personnel> getPersonnellWOBoss() throws Exception;
     public Map<Long, List<Personnel>> getPersonnelOrganigram() throws Exception;
 
+    public Map<CompanyCar, Personnel> getCompanyCars() throws Exception;
+    
+    public String[][] getdepartmentCountPersonnel() throws Exception;
+    
     public void close();
 }

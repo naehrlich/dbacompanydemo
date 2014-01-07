@@ -63,33 +63,34 @@ public class ExampleData extends TestCase {
     }
 
     public DBAccess access;
-
+    
     public void jdbcLocal() throws Exception {
         access = new JdbcAccess("firmenwelt", "firmenwelt10");
-        createData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void jdbc() throws Exception {
         access = new JdbcAccess(); // codd.hs-mannheim.de
-        createData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void db4oEmbedded() throws Exception {
         new File("firmenwelt.yap").delete();
         access = new Db4oAccess("firmenwelt.yap");
-        createData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void db4oServer() throws Exception {
         access = new Db4oAccess();
-        createData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
     public void hibernateLocal() throws Exception {
         access = new HibernateDBAccess();
-        createData();
+        new TestDataGeneratorStandard().createMockData(access);
     }
 
+    /*
     private void createData() throws Exception {
         // Create some car types:
         Car touran = new Car("Touran", "VW");
@@ -237,9 +238,17 @@ public class ExampleData extends TestCase {
                 "+49 621 12345-599", null, "Berater", employeeLohe, null);
 
         // --------------------- Projects ---------------------------
+        
+        //ProjektStatus
+        ProjectStatus nu = new ProjectStatus("New", "Neu");
+        ProjectStatus inProcess = new ProjectStatus("InProcess", "In Bearbeitung");
+        ProjectStatus blocked = new ProjectStatus("Blocked", "Blockiert");
+        ProjectStatus cancelled = new ProjectStatus("Cancelled", "Abgebrochen");
+        ProjectStatus finished = new ProjectStatus("Finished", "Abgeschlossen");
 
         // Leute einstellen:
         Project hirePeople = new Project("LES", "Personal einstellen");
+        hirePeople.setStatus(nu);
         access.storeProject(hirePeople);
         WorksOn hirePeopleLohe = new WorksOn(employeeLohe, hirePeople, 10,
                 "Verträge ausstellen");
@@ -256,6 +265,7 @@ public class ExampleData extends TestCase {
 
         // Neues Produkt entwickeln:
         Project research = new Project("FOP", "Neues Produkt entwickeln");
+        hirePeople.setStatus(inProcess);
         access.storeProject(research);
         WorksOn researchWalther = new WorksOn(employeeWalther, research, 50,
                 "Modelle entwerfen");
@@ -276,6 +286,7 @@ public class ExampleData extends TestCase {
 
         // DB portieren:
         Project dbPort = new Project("DBP", "DB portieren");
+        hirePeople.setStatus(nu);
         access.storeProject(dbPort);
         WorksOn dbPortZiegler = new WorksOn(employeeZiegler, dbPort, 20,
                 "Architektur entwerfen");
@@ -287,6 +298,7 @@ public class ExampleData extends TestCase {
 
         // Security-Konzept:
         Project securityConcept = new Project("SEC", "Security-Konzept für Firma");
+        hirePeople.setStatus(nu);
         access.storeProject(securityConcept);
         WorksOn securityConceptZiegler = new WorksOn(employeeZiegler, securityConcept, 40,
                 "Security-Konzept entwerfen");
@@ -323,6 +335,7 @@ public class ExampleData extends TestCase {
      * @return
      * @throws Exception
      */
+    /*
     private Employee addEmployee(String lastName, String firstName,
                                  int year, int month, int day, double salary,
                                  String street, String houseNumber,
@@ -360,6 +373,7 @@ public class ExampleData extends TestCase {
      * @return
      * @throws Exception
      */
+    /*
     private Worker addWorker(String lastName, String firstName,
                              int year, int month, int day, double salary,
                              String street, String houseNumber,
@@ -375,4 +389,5 @@ public class ExampleData extends TestCase {
         access.storePersonnel(worker);
         return worker;
     }
+    */
 }

@@ -14,6 +14,7 @@ Zuerst werden bestehende Daten gelöscht.
 */
 delete from Statusbericht;
 delete from MitarbeiterArbeitetAnProjekt;
+delte from ProjektStatus
 delete from Projekt;
 delete from Firmenwagen;
 delete from Auto; 

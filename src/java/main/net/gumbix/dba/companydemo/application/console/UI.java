@@ -31,6 +31,7 @@ import java.io.*;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Date;
 import java.util.Locale;
@@ -43,7 +44,9 @@ import javax.security.auth.login.LoginException;
  * @author Markus Gumbel (m.gumbel@hs-mannheim.de)
  * @author Patrick Sturm (patrick-sturm@gmx.net)
  * @author Marius Czardybon (m.czardybon@gmx.net)
- * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de )
+ * @author Maximilian Nährlich (maximilian.naehrlich@stud.hs-mannheim.de)
+ * @author Katrin Andraschko (katrin.andraschko@stud.hs-mannheim.de)
+ * @author Andreas Küster (andreas.kuester@stud.hs-mannheim.de)
  */
 public class UI {
 
@@ -101,7 +104,7 @@ public class UI {
                     break;
 
                 case 3:
-                    db = new JdbcAccess("firmenwelt", "firmenwelt10");
+                	db = new JdbcAccess("firmenwelt", "firmenwelt10");
                     menu();
                     break;
 
@@ -154,6 +157,14 @@ public class UI {
                 case 0:
                     System.out.println("Programm wird beendet.");
                     break;
+                
+                case 42:
+                	if(db!=null){
+                		db.close();
+                	}
+                	db = new net.gumbix.dba.companydemo.test.JdbcAccessTestDouble(new net.gumbix.dba.companydemo.test.TestDataGeneratorStandard());
+                    menu();
+                    break;
 
                 // Invalide Eingabe:
                 default:
@@ -187,6 +198,7 @@ public class UI {
         int menuChoice;
 
         do {
+        	System.out.println("");
             System.out.println("*** DBA-Firmenbeispiel-Hauptmenu ***\n\n"
                     + "Was moechten Sie tun?\n\n"
                     + "1 Personal verwalten\n"
@@ -815,7 +827,9 @@ public class UI {
                     + "1 Statistik\n"
                     + "2 Nicht ausgelastete Angestellte\n"
                     + "3 Projektuebersicht\n"
-                    + "4 Organigramm\n\n"
+                    + "4 Organigramm\n"
+                    + "5 Firmenwagenuebersicht\n"
+                    + "6 Abteilungsübersicht\n\n"
                     + "0 Zurueck");
 
             menuChoice = getMenuChoice();
@@ -823,15 +837,27 @@ public class UI {
             switch (menuChoice) {
 
                 case 1:
+                	System.out.println("");
                     System.out.println("*** Statistik ***\n");
 
                     int mc = db.getNumberOfPersonnel();
                     System.out.println("Anzahl Mitarbeiter: " + mc);
+                    int wc = db.getNumberOfWorkers();
+                    System.out.println("  davon Arbeiter:   " + wc);
                     int pc = db.getNumberOfProjects();
                     System.out.println("Anzahl Projekte:    " + pc);
+                    int dc = db.getNumberOfDepartments();
+                    System.out.println("Anzahl Abteilungen: " + dc);
+                    int cc = db.getNumberOfCars();
+                    System.out.println("Anzahl Autos:       " + cc);
+                    int uc = db.getNumberOfUsedCars();
+                    System.out.println("Benutze Firmenwagen:  " + uc);
+                    int fa = db.getNumberOfFreeCars();
+                    System.out.println("Unbenutze Firmenwagen:" + fa);
                     break;
 
                 case 2:
+                	System.out.println("");
                     System.out.println("*** Nicht ausgelastete Angestellte ***\n");
 
                     List<Employee> list = db.getIdleEmployees();
@@ -858,6 +884,44 @@ public class UI {
                 	processReportOrganigram(personnelWOBoss, mapOrganigram);
                 	break;
                 	
+                case 5:
+                	System.out.println("");
+                 	System.out.println("*** Firmenwagenuebersicht ***\n");
+                 	
+                 	Map<CompanyCar, Personnel> carsWithPersonnel = db.getCompanyCars();
+                 	Set<CompanyCar> cars= carsWithPersonnel.keySet();
+                 	Iterator iterator = cars.iterator();
+                 	
+                 	while(iterator.hasNext()){
+                 		CompanyCar key = (CompanyCar) iterator.next();
+                 		System.out.println(key.getLicensePlate());
+                 		
+                 		Personnel personnel = carsWithPersonnel.get(key);
+                 		if(personnel.getPersonnelNumber()!=0){
+                 			System.out.println("  "+personnel.getPersonnelNumber()
+                 					+" - "+personnel.getFirstName()+" "+personnel.getLastName());
+                 		}else{
+                 			System.out.println("  allgemeiner Firmenwagen");
+                 		}
+                 	}
+                 	
+                case 6:
+                	System.out.println();
+                	System.out.println("------------------------------------");
+                	System.out.println("---      Abteilungsübersicht     ---");
+                	System.out.println("------------------------------------");
+                	
+                	
+                	String[][] result = db.getdepartmentCountPersonnel();
+                	
+                	System.out.println("Bezeichnung - Anzahl der Mitarbeiter");
+                	System.out.println("------------------------------------");
+                	for(int i = 0; i<result.length ; i++)//Es gibt sieben Abteilungen
+            		{
+                		System.out.println(result[i][0]+" - "+result[i][1]);
+            		}
+                	System.out.println("------------------------------------");
+                	
                 case 0:
                     break;
 
@@ -872,6 +936,7 @@ public class UI {
      * Helper methods.
      */
     private static void processReportProjectOverview(List<Project> projects){
+    	System.out.println("");
     	System.out.println("*** Projektuebersicht ***\n");
     	String lastProjectId = "";
     	for (Project project : projects) {
@@ -898,7 +963,8 @@ public class UI {
     }
     
     private static void processReportOrganigram(List<Personnel> personnelWOBoss, Map<Long, List<Personnel>> mapOrganigram){
-    	
+    	System.out.println("");
+    	System.out.println("*** Organigramm ***\n");
     	for(Personnel pWOBoss : personnelWOBoss){
     		printPersonnel(pWOBoss);
     		System.out.println();
@@ -985,5 +1051,6 @@ public class UI {
         System.out.println(" - Patrick Sturm");
         System.out.println(" - Markus Gumbel");
         System.out.println(" - Maximilian Naehrlich");
+        System.out.println(" - Katrin Andraschko");
     }
 }

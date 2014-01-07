@@ -47,7 +47,7 @@ public class Project {
 
     public Project(String projectId, String description) {
         this.projectId = projectId;
-        this.description = description;
+        this.description = description;        
     }
 
     public String getProjectId() {
@@ -165,7 +165,7 @@ public class Project {
 		return nextStatus;
 	}
     
-    public void setNextStatus(ProjectStatus nextStatus) throws Exception, SQLException{
+    public void setNextStatus(ProjectStatus nextStatus) throws Exception{
 		//test if nextStatis is valid
 		boolean isValid = false;
 		List<ProjectStatusEnum> posNextStatus = this.getNextStatus();
@@ -188,7 +188,7 @@ public class Project {
 		
 		if(nextStatus.getStatus() == ProjectStatusEnum.Finished){
 			//remove all Employees working on this project		
-			this.employees.clear();			
+			this.employees.clear();	
 			//set next status
 			this.setStatus(nextStatus);
 		}

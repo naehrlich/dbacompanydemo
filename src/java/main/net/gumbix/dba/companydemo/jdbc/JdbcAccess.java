@@ -209,6 +209,11 @@ public class JdbcAccess extends AbstractDBAccess {
     public ProjectStatus loadProjectStatus(ProjectStatusEnum projectStatus) throws Exception {
     	return projStDAO.load(projectStatus);
     }
+    
+	@Override
+	public void storeProjectStatus(ProjectStatus projectStatus) throws Exception {
+		projStDAO.store(projectStatus);
+	}
 
     // Queries
     public int getNumberOfPersonnel() throws Exception {
@@ -220,6 +225,17 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return result;
     }
+    
+    @Override
+	public int getNumberOfWorkers() throws Exception {
+    	Statement query = connection.createStatement();
+        ResultSet rs = query.executeQuery("select count(*) from Arbeiter");
+        rs.next();
+        int result = rs.getInt(1);
+        rs.close();
+        query.close();
+        return result;
+	}
 
     public int getNumberOfProjects() throws Exception {
         Statement query = connection.createStatement();
@@ -230,11 +246,57 @@ public class JdbcAccess extends AbstractDBAccess {
         query.close();
         return result;
     }
+    
+    @Override
+   	public int getNumberOfCars() throws Exception {
+       	Statement query = connection.createStatement();
+       	ResultSet rs = query.executeQuery("select count(*) from Auto");
+       	rs.next();
+           int result = rs.getInt(1);
+           rs.close();
+           query.close();
+           return result;
+   	}
+    
+    @Override
+	public int getNumberOfFreeCars() throws Exception {
+		Statement query = connection.createStatement();
+		ResultSet rs = query
+				.executeQuery("select count(*) from Firmenwagen where personalNr is null");
+		rs.next();
+		int result = rs.getInt(1);
+		rs.close();
+		query.close();
+		return result;
+	}
+
+	@Override
+	public int getNumberOfUsedCars() throws Exception {
+		Statement query = connection.createStatement();
+		ResultSet rs = query
+				.executeQuery("select count(*) from Firmenwagen where personalNr is not null");
+		rs.next();
+		int result = rs.getInt(1);
+		rs.close();
+		query.close();
+		return result;
+	}
+
+   	@Override
+   	public int getNumberOfDepartments() throws Exception {
+   		Statement query = connection.createStatement();
+   		ResultSet rs = query.executeQuery("select count(*) from Abteilung");
+   		rs.next();
+           int result = rs.getInt(1);
+           rs.close();
+           query.close();
+           return result;
+   	}
 
     public List<Employee> getIdleEmployees() throws Exception {
-        String queryString = "select personalNr, sum(prozAnteil) " +
+        String queryString = "select Mitarbeiter.personalNr, sum(MitarbeiterArbeitetAnProjekt.prozAnteil) " +
                 "from Mitarbeiter natural join MitarbeiterArbeitetAnProjekt " +
-                "group by Mitarbeiter.personalNr having sum(prozAnteil) < 50 " +
+                "group by Mitarbeiter.personalNr having sum(MitarbeiterArbeitetAnProjekt.prozAnteil) < 50 " +
                 "order by Mitarbeiter.nachname";
         Statement query = connection.createStatement();
         ResultSet rs = query.executeQuery(queryString);
@@ -321,6 +383,58 @@ public class JdbcAccess extends AbstractDBAccess {
         rs.close();
         query.close();
         return personnels;
+	}
+	
+	@Override
+	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+		String queryString = "select nummernschild, personalNr from Firmenwagen;";
+		
+		Statement query = connection.createStatement();
+		ResultSet rs = query.executeQuery(queryString);
+		
+		Map<CompanyCar,Personnel> carsWithPersonnel = new HashMap();
+		
+		while (rs.next()){
+			String licensePlate = rs.getString(1);
+			CompanyCar car = (comCarDAO.load(licensePlate));
+			Personnel personnel = null;
+			
+			if(rs.getLong(2)!=0){
+				 personnel= persDAO.load(rs.getLong(2));
+			}else{
+				personnel = new Personnel();
+			}
+			
+			carsWithPersonnel.put(car, personnel);
+		}
+		rs.close();
+		query.close();
+		return carsWithPersonnel;
+	}	
+	
+	public String[][] getdepartmentCountPersonnel() throws Exception {
+		String queryString = "select a.bezeichnung , count(bezeichnung) as 'AnzahlDerMitarbeiter' "
+						+"from Abteilung a "
+						+"join Mitarbeiter m "
+						+"on a.abteilungsNr = m.abteilungsId "
+						+"group by bezeichnung";
+						
+		Statement query = connection.createStatement();
+		ResultSet rs = query.executeQuery(queryString);	
+		int anzahlAbteilungen= getNumberOfDepartments();
+		String[][] result = new String[anzahlAbteilungen][2];	
+		
+		rs.first();
+		for(int i = 0; i<anzahlAbteilungen ; i++)
+		{			
+			if (rs.next()){
+				result[i][0]=rs.getString("bezeichnung");
+				result[i][1]=rs.getString("AnzahlDerMitarbeiter");
+			}
+		}
+		rs.close();
+		query.close();
+		return result;
 	}
 
 }

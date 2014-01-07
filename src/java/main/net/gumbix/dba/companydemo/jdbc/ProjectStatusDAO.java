@@ -1,6 +1,7 @@
 package net.gumbix.dba.companydemo.jdbc;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.WeakHashMap;
 
@@ -32,6 +33,25 @@ public class ProjectStatusDAO extends AbstractDAO {
             throw new ObjectNotFoundException(ProjectStatus.class, projectStatus + "");
         }
 	}
+	
+	public void store(ProjectStatus projectStatus) throws Exception {
+        PreparedStatement pstmt;
+        try {
+        	load(projectStatus.getStatus());
+            // update
+            pstmt = prepareStatement("update ProjektStatus set beschreibung = ?, " +
+                    " where statusId = ?");
+            pstmt.setString(1, projectStatus.getDescription());
+            pstmt.setString(2, projectStatus.getStatusId());            
+            pstmt.execute();
+        } catch (ObjectNotFoundException e) {
+            // new record
+            pstmt = prepareStatement("insert into ProjektStatus values (?, ?)");
+            pstmt.setString(1, projectStatus.getStatusId());
+            pstmt.setString(2, projectStatus.getDescription());
+            pstmt.execute();
+        }
+    }
 	
 	private ProjectStatus createAndCache(String statusId, ProjectStatus projectStatus) {
         cache.put(statusId, projectStatus);
