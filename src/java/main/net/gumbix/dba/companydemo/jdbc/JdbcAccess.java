@@ -248,6 +248,17 @@ public class JdbcAccess extends AbstractDBAccess {
     }
     
     @Override
+   	public int getNumberOfCompanyCars() throws Exception {
+       	Statement query = connection.createStatement();
+       	ResultSet rs = query.executeQuery("select count(*) from Firmenwagen");
+       	rs.next();
+           int result = rs.getInt(1);
+           rs.close();
+           query.close();
+           return result;
+   	}
+    
+    @Override
    	public int getNumberOfCars() throws Exception {
        	Statement query = connection.createStatement();
        	ResultSet rs = query.executeQuery("select count(*) from Auto");

@@ -358,6 +358,12 @@ public class Db4oAccess extends AbstractDBAccess {
     public int getNumberOfProjects() throws Exception {
         return db.queryByExample(new Project()).size();
     }
+    
+	@Override
+   	public int getNumberOfCompanyCars() throws Exception {
+		 // TODO
+		throw new RuntimeException("Method not yet implemented");
+	}
 
     public List<Employee> getIdleEmployees() throws Exception {
         // TODO

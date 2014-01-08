@@ -278,6 +278,12 @@ public class HibernateDBAccess extends AbstractDBAccess {
 	}
 	
 	@Override
+   	public int getNumberOfCompanyCars() throws Exception {
+		 // TODO
+		throw new RuntimeException("Method not yet implemented");
+	}
+	
+	@Override
 	public int getNumberOfCars() throws Exception {
 		 // TODO
 		throw new RuntimeException("Method not yet implemented");

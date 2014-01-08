@@ -848,7 +848,7 @@ public class UI {
                     System.out.println("Anzahl Projekte:    " + pc);
                     int dc = db.getNumberOfDepartments();
                     System.out.println("Anzahl Abteilungen: " + dc);
-                    int cc = db.getNumberOfCars();
+                    int cc = db.getNumberOfCompanyCars();
                     System.out.println("Anzahl Autos:       " + cc);
                     int uc = db.getNumberOfUsedCars();
                     System.out.println("Benutze Firmenwagen:  " + uc);
