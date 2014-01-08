@@ -113,6 +113,7 @@ public interface DBAccess {
     public int getNumberOfPersonnel() throws Exception;
     public int getNumberOfProjects() throws Exception;
     public int getNumberOfCars() throws Exception;
+    public int getNumberOfCompanyCars() throws Exception;
     public int getNumberOfDepartments() throws Exception;
     public int getNumberOfWorkers() throws Exception;
     public int getNumberOfFreeCars() throws Exception;
