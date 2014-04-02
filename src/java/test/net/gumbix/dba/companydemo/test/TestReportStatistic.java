@@ -5,6 +5,7 @@ import net.gumbix.dba.companydemo.db.DBAccess;
 import net.gumbix.dba.companydemo.domain.Car;
 import net.gumbix.dba.companydemo.domain.CompanyCar;
 import net.gumbix.dba.companydemo.domain.Department;
+import net.gumbix.dba.companydemo.domain.Employee;
 import net.gumbix.dba.companydemo.domain.Personnel;
 import net.gumbix.dba.companydemo.domain.Project;
 import net.gumbix.dba.companydemo.domain.ProjectStatus;
@@ -37,6 +38,8 @@ public class TestReportStatistic {
 		assertTrue(access.getNumberOfProjects() == 0);
 		assertTrue(access.getNumberOfDepartments() == 0);
 		assertTrue(access.getNumberOfCompanyCars() == 0);
+		assertTrue(access.getNumberOfFreeCars() == 0);
+		assertTrue(access.getNumberOfUsedCars() == 0);
 
 		access.close();
 	}
@@ -73,7 +76,7 @@ public class TestReportStatistic {
 		};
 
 		access = new JdbcAccessTestDouble(testDataGeneratorCustom);
-
+		
 		assertTrue(access.getNumberOfPersonnel() == 0);
 		assertTrue(access.getNumberOfWorkers() == 0);
 		assertTrue(access.getNumberOfProjects() == 1);
@@ -109,19 +112,21 @@ public class TestReportStatistic {
 		assertTrue(access.getNumberOfProjects() == 4);
 		assertTrue(access.getNumberOfDepartments() == 9);
 		assertTrue(access.getNumberOfCompanyCars() == 7);
-
-		Personnel pers1 = access.loadEmployee(2);
+		assertTrue(access.getNumberOfFreeCars() == 1);
+		assertTrue(access.getNumberOfUsedCars() == 6);
+		
+		Employee pers1 = access.loadEmployee(2);
 		access.deletePersonnel(pers1);
-
+		
 		assertTrue(access.getNumberOfPersonnel() == 20);
 		assertTrue(access.getNumberOfWorkers() == 4);
-
+		
 		Personnel pers2 = access.loadWorker(12);
 		access.deletePersonnel(pers2);
-
+		
 		assertTrue(access.getNumberOfPersonnel() == 19);
 		assertTrue(access.getNumberOfWorkers() == 3);
-
+		
 		access.close();
 	}
 

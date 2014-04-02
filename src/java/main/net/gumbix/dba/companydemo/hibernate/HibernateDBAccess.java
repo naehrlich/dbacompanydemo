@@ -317,7 +317,7 @@ public class HibernateDBAccess extends AbstractDBAccess {
 	}
 	
 	@Override
-	public Map<CompanyCar, Personnel> getCompanyCars() throws Exception {
+	public List<CompanyCar> getCompanyCars() throws Exception {
 		throw new RuntimeException("Method not yet implemented");
 	}	
 	

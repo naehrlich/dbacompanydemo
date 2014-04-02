@@ -888,22 +888,22 @@ public class UI {
                 	System.out.println("");
                  	System.out.println("*** Firmenwagenuebersicht ***\n");
                  	
-                 	Map<CompanyCar, Personnel> carsWithPersonnel = db.getCompanyCars();
-                 	Set<CompanyCar> cars= carsWithPersonnel.keySet();
-                 	Iterator iterator = cars.iterator();
+                 	List<CompanyCar> cars = db.getCompanyCars();
+                 	Iterator<CompanyCar> iterator = cars.iterator();
                  	
                  	while(iterator.hasNext()){
-                 		CompanyCar key = (CompanyCar) iterator.next();
-                 		System.out.println(key.getLicensePlate());
+                 		CompanyCar car = iterator.next();
+                 		System.out.println(car.getLicensePlate());
                  		
-                 		Personnel personnel = carsWithPersonnel.get(key);
-                 		if(personnel.getPersonnelNumber()!=0){
+                 		Personnel personnel = car.getDriver();
+                 		if(personnel != null){
                  			System.out.println("  "+personnel.getPersonnelNumber()
                  					+" - "+personnel.getFirstName()+" "+personnel.getLastName());
                  		}else{
                  			System.out.println("  allgemeiner Firmenwagen");
                  		}
                  	}
+                 	break;
                  	
                 case 6:
                 	System.out.println();
